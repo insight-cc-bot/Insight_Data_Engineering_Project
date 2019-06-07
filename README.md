@@ -1,17 +1,9 @@
 # Insight_Data_Engineering_Project
 
-## Reddit Insights
+## ``Reddit Insights``
 
-Reddit is a community-driven social platform, there are a lot of interesting posts shared every day across a number of 
-subreddits. This is great for users but the problem is that users have to spend a significant amount of time scrolling 
-through all the posts in order to discover new and interesting posts in a subreddit that can be valuable to him/her. 
-It is very time-consuming to go through all of the posts but at the same time, you would not want to miss knowing about 
-those interesting topics. As new events occur every day, there are always new and interesting topics to explore. It is 
-important for a user to spend less time discovering the content but still remain informed about the latest trend in a 
-subreddit. This is something we often see on Twitter or Instagram where hashtags allow a user to explore content on 
-related topics. Even YouTube has started generating tags for each video that would allow users to explore similar 
-content. Therefore in order to enhance customer experience and user engagement in Reddit, I want to come up with this 
-new feature to help users stay more informed and active with Reddit.
+Reddit is a community-driven social platform with lots of interesting posts shared every day across a number of 
+subreddits on a variety of topics. This is great for Reddit community and users but this also leads to some problems for the users. The users have to spend a significant amount of time scrolling through all the posts in order to discover some interesting posts of their choice/preference in a subreddit they follow. Although it is time-consuming to surf through the posts but at the same time, users would not want to miss knowing the topics of their choice. So it is important that user spend less time discovering the content but still remain informed about the latest trend in their favorite subreddit. Therefore I have come up with a new feature - **`Reddit-Tags`**, that would help to enhance `customer experience` and improve `user engagement` by showing popular tags on a subreddit. The inspiration for **`Reddit-Tags`** come from hashtags used in other social media platforms like Instagram and Twitter. Hashtags allow users to explore new contents corresponding to each tags thereby increasing user engagement and improving user experience on the platform.
 
 
 ### `` Project Idea:`` 
