@@ -1,6 +1,6 @@
 # Insight_Data_Engineering_Project
 
-# Reddit Insights
+## Reddit Insights
 
 Reddit is a community-driven social platform, there are a lot of interesting posts shared every day across a number of 
 subreddits. This is great for users but the problem is that users have to spend a significant amount of time scrolling 
@@ -14,7 +14,7 @@ content. Therefore in order to enhance customer experience and user engagement i
 new feature to help users stay more informed and active with Reddit.
 
 
-`` Project Idea:`` 
+### `` Project Idea:`` 
 
 1. Generate tags(keywords) for each SubReddit that help user to see top topics
 2. Index all the posts corresponding to the generated tags   
@@ -22,28 +22,28 @@ new feature to help users stay more informed and active with Reddit.
 4. Identify popular vs active SubReddits based on user engagement to decide best subreddit to put ads. 
 
 
-`` Extended Project Idea:``
+### `` Extended Project Idea:``
 
 5. Identify the most active SubReddits (Real Time Processing)
 6. Top keywords being used in last one hour
 
 
 
-`` Business Case:`` 
+### `` Business Case:`` 
 
 1. Improve Customer Experience by generating tags for each subreddit and displaying corresponding list of posts
 2. Displaying ads on relevant reddit channel
 3. Seasonality insight can be used by Analyst and Marketing team in managing their social media/Ad campaigns
 
 
-``Dataset:`` 
+### ``Dataset:`` 
 
 1. Link: https://files.pushshift.io/reddit/
 2. Size: 900 GB
 3. Features :  Subreddit_id , subreddit name , Author,  created timestamp,    submission, comments, replies, upvotes, downvotes
 
 
-``Engineering Challenge:`` 
+### ``Engineering Challenge:`` 
 
 1. Indexing posts for generated tags to reduce search complexity of  O(M*N) to O(1) 
 2. Text data preprocessing and cleaning which include - removing stopword, removing punctuations, removing urls etc. 
@@ -54,7 +54,7 @@ new feature to help users stay more informed and active with Reddit.
     N= number of records 
 3.  Implement incremental aggregations and avoid re-computation.
 
-`` Tech Stack:`` 
+### `` Tech Stack:`` 
 
 1. S3
 2. Spark
@@ -64,7 +64,7 @@ new feature to help users stay more informed and active with Reddit.
 6. Spark streaming/Flink
 
 
-`` Presentation Slides:`` 
+### `` Presentation Slides:`` 
 https://docs.google.com/presentation/d/1GJnKdTFyCLTXobDSQXum8JLYhgn6IeC2ZAp_jjl0nEU/edit#slide=id.g5b1cafed5b_0_1416
 
 
