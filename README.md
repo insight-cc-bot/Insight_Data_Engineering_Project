@@ -2,13 +2,16 @@
 
 # Reddit Insights
 
-As a Reddit user, I have often spent most of my time scrolling, reading and searching a lot of posts in a subreddit and 
-then finding out the post which is interesting and valuable to me. There is a lot of interesting posts shared by 
-community members but it is time-consuming to go through all of them but at the same time, you would not want to miss 
-knowing about those interesting topics. As with changing time and evolving trends in the social media industry. It is 
-important for a user to spend less time and still remain informed about the latest trend in a particular field. We need
-to enhance user experience. Hence in order to enhance customer experience and increase user engagement in Reddit. I have
-come up with a new feature for Reddit users to stay more informed and active with Reddit.
+Reddit is a community-driven social platform, there are a lot of interesting posts shared every day across a number of 
+subreddits. This is great for users but the problem is that users have to spend a significant amount of time scrolling 
+through all the posts in order to discover new and interesting posts in a subreddit that can be valuable to him/her. 
+It is very time-consuming to go through all of the posts but at the same time, you would not want to miss knowing about 
+those interesting topics. As new events occur every day, there are always new and interesting topics to explore. It is 
+important for a user to spend less time discovering the content but still remain informed about the latest trend in a 
+subreddit. This is something we often see on Twitter or Instagram where hashtags allow a user to explore content on 
+related topics. Even YouTube has started generating tags for each video that would allow users to explore similar 
+content. Therefore in order to enhance customer experience and user engagement in Reddit, I want to come up with this 
+new feature to help users stay more informed and active with Reddit.
 
 
 `` Project Idea:`` 
@@ -16,7 +19,7 @@ come up with a new feature for Reddit users to stay more informed and active wit
 1. Generate tags(keywords) for each SubReddit that help user to see top topics
 2. Index all the posts corresponding to the generated tags   
 3. Identify subreddit seasonality using comments aggregation.
-4. Identify popular vs active SubReddits based on user engagement to decide best subreddit to put ads 
+4. Identify popular vs active SubReddits based on user engagement to decide best subreddit to put ads. 
 
 
 `` Extended Project Idea:``
@@ -42,13 +45,13 @@ come up with a new feature for Reddit users to stay more informed and active wit
 
 ``Engineering Challenge:`` 
 
-1. Indexing posts for generated tags to reduce search complexity of  O(M*N)
+1. Indexing posts for generated tags to reduce search complexity of  O(M*N) to O(1) 
 2. Text data preprocessing and cleaning which include - removing stopword, removing punctuations, removing urls etc. 
-   Complexity:  O(M*(N^2))
-   O(N^2) to compare two text bodies (comments vs stopwords)
-   O(M) for all posts from reddit
-   M= documents
-   N= number of records
+    Complexity:  O(M*(N^2))
+    O(N^2) to compare two text bodies (comments vs stopwords)
+    O(M) for all posts from reddit
+    M= documents
+    N= number of records 
 
 
 `` Tech Stack:`` 
