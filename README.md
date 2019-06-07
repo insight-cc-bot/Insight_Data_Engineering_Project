@@ -52,7 +52,7 @@ new feature to help users stay more informed and active with Reddit.
     O(M) for all posts from reddit
     M= documents
     N= number of records 
-
+3.  Implement incremental aggregations and avoid re-computation.
 
 `` Tech Stack:`` 
 
