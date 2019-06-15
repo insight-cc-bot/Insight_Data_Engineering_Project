@@ -82,9 +82,9 @@ def upload_to_s3(filename, destination):
         # load file to spark
         df_dataset = sqlContext.read.json(filename)
         # write file to Parquet
-        print("STATUS: writing file {0} \n".format(destination))
+        logging.info("STATUS: writing file {0} \n".format(destination))
         df_dataset.write.parquet(destination)
-        print("STATUS: Completed loading to S3... \n")
+        logging.info("STATUS: Completed loading to S3... \n")
         return True
     except Exception as ex:
         logging.exception("ERROR writing to S3 {0}".format(ex))
@@ -131,7 +131,7 @@ def load_comments(start_year, end_year):
             # Step 1: get dataset URLs
             base_url = "https://files.pushshift.io/reddit/comments/"
             url_list = get_file_names(base_url, year)
-            print("STATUS: loading url list ...\n")
+            logging.info("STATUS: loading url list ...\n")
             # Step 2: create subdirectory in Comments S3 Bucket "reddit-comments-raw"
             response = s3.put_object(Bucket='reddit-comments-raw',
                                      Body='',
@@ -141,24 +141,27 @@ def load_comments(start_year, end_year):
             if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 for url in url_list:
                     # DOWNLOAD DATASET TO EC2
-                    print("STATUS: downloading dataset... \n")
+                    logging.info("STATUS: downloading dataset... \n")
                     filename = download_dataset(url)
-                    print("STATUS: download completed{0}".format(filename))
                     # UPLOAD DATASET TO S3
                     if filename:  # if it doesn't return None
-                        print("STATUS: loading Parquet... \n")
+                        logging.info("STATUS: download completed of {0}".format(filename))
+                        logging.info("STATUS: loading Parquet... \n")
                         destination = "s3a://reddit-comments-raw/{year}/comments_{year}_{month}.parquet".\
                             format(year=year, month=url[-6:-4])
                         upload_to_s3(filename, destination)
-                        print("STATUS: deleteing {0} from local ...\n".format(filename))
+                        logging.info("STATUS: deleteing {0} from local ...\n".format(filename))
                         # DELTE DATASET FROM EC2
                         delete_files(filename)
                         # SLEEP - to avoid being blocked (5mins - 300secs)
-                    print("STATUS: taking nap zzzzzZZZZZZ....\n")
+                    else:
+                        logging.warning("WARNING: No dataset available...")
+                    
+                    logging.info("STATUS: taking nap zzzzzZZZZZZ....\n")
                     time.sleep(60)
             else:
                 logging.warning("WARNING : Directory can not be created")
-        print("STATUS: Completed loading the data....{0}".format(year))
+        logging.info("STATUS: Completed loading the data....{0}".format(year))
         return True
     except Exception as ex:
         logging.exception("ERROR uploading data".format(ex))
