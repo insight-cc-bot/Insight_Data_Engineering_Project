@@ -11,14 +11,15 @@ from config import (AWS_ACCESS_ID, AWS_ACCESS_KEY)
 
 # ===== SPARK Configs =====
 import findspark
+
 findspark.init()
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 
 # spark context
 sc = SparkContext()
-sc._jsc.hadoopConfiguration().set("fs.s3a.awsAccessKeyId", AWS_ACCESS_ID)
-sc._jsc.hadoopConfiguration().set("fs.s3a.awsSecretAccessKey", AWS_ACCESS_KEY)
+#sc._jsc.hadoopConfiguration().set("fs.s3a.awsAccessKeyId", AWS_ACCESS_ID)
+#sc._jsc.hadoopConfiguration().set("fs.s3a.awsSecretAccessKey", AWS_ACCESS_KEY)
 
 # SqlContext
 sqlContext = SQLContext(sc)
@@ -34,11 +35,13 @@ log_dir = "./logs/"
 if not os.path.exists(log_dir):
     os.mkdir(log_dir)
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%m-%d %H:%M',
-                    filename=log_dir + "data_ingestion" + str(TS) + ".log",
-                    filemode='w')
+logger = logging.getLogger('spam_application')
+logger.setLevel(logging.DEBUG)
+logger = logging.basicConfig(level=logging.DEBUG,
+                             format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                             datefmt='%m-%d %H:%M',
+                             filename=log_dir + "data_ingestion" + str(TS) + ".log",
+                             filemode='w')
 
 
 def delete_files(filename):
@@ -90,7 +93,7 @@ def upload_to_s3(filename, destination):
         logging.exception("ERROR writing to S3 {0}".format(ex))
 
 
-def get_file_names(base_url, year):
+def get_file_names(base_url, year, dataset_name):
     """
     Generate list of urls for given year
     :param base_url: base url for dataset
@@ -99,16 +102,75 @@ def get_file_names(base_url, year):
     """
     # base url:
     # get list of file names to download
-    file_names = ["RC_{0}-{1:02d}.bz2".format(year, month) for month in range(1, 13)]
+    file_names = [dataset_name.format(year, month) for month in range(1, 13)]
     # generate full url
     url_list = ["{0}{1}".format(base_url, _name) for _name in file_names]
     return url_list
 
-# TODO
+
+def load_data_to_S3(year, url_list, bucket_name, destination_address):
+    """
+    perform data loading from Source to S3
+    :return:
+    """
+    try:
+        # create subdirectory in Bucket
+        response = s3.put_object(Bucket=bucket_name,
+                                 Body='',
+                                 Key="{0}/".format(year))
+
+        # if Folder Successful created or Exist StatusCode
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            for url in url_list:
+                # step 1: DOWNLOAD DATASET TO EC2
+                logging.info("STATUS: downloading dataset... {0}\n".format(url))
+                filename = download_dataset(url)
+                #print(url, filename)
+                # step 2: UPLOAD DATASET TO S3
+                if filename:
+                    logging.info("STATUS: download completed of dataset {0}".format(filename))
+
+                    logging.info("STATUS: uploading Parquet... \n")
+                    destination = destination_address.format(year=year, month=url[-6:-4])
+                    upload_to_s3(filename, destination)
+
+                    # step 3: DELETE Dataset
+                    logging.info("STATUS: deleteing {0} from local ...\n".format(filename))
+                    delete_files(filename)
+                else:
+                    logging.warning("WARNING: No dataset available...")
+                # SLEEP - to avoid being blocked (5mins - 300secs)
+                logging.info("STATUS: taking nap zzzzzZZZZZZ....\n")
+                time.sleep(60)
+        else:
+            logging.warning("WARNING : Directory can not be created")
+    except Exception as ex:
+        logging.exception("ERROR uploading data".format(ex))
+    return
+
+
 def load_submissions(start_year, end_year):
-    # set base url:
-    base_url = ""
-    # get file names
+    """
+    Load the submissions for start and end period
+    :param start_year:
+    :param end_year:
+    :return:
+    """
+    logging.info("STATUS: loading submissions .... \n")
+    base_url = "https://files.pushshift.io/reddit/submissions/old_v1_data/"
+    dataset_name= "RS_{0}-{1:02d}.bz2"
+    bucket_name = "reddit-submissions-raw"
+    destination_address = "s3a://reddit-submissions-raw/{year}/submissions_{year}_{month}.parquet"
+    try:
+        for year in range(start_year, end_year + 1):
+            # list of url
+            url_list = get_file_names(base_url, year, dataset_name)
+            logging.info("STATUS: starting to load the data for....{0}".format(year))
+            load_data_to_S3(year, url_list, bucket_name, destination_address)
+            logging.info("STATUS: Completed loading the data....{0}".format(year))
+    except Exception as ex:
+        logging.info("error loading the data due to ....{0}".format(ex))
+    return
 
 
 def load_comments(start_year, end_year):
@@ -124,47 +186,21 @@ def load_comments(start_year, end_year):
     :param end_year: YYYY Ending year of Upload
     :return:
     """
-    print("STATUS: loading comments .... \n")
+    logging.info("STATUS: loading comments .... \n")
+    base_url = "https://files.pushshift.io/reddit/comments/"
+    dataset_name = "RC_{0}-{1:02d}.bz2"
+    bucket_name = "reddit-comments-raw"
+    destination_address = "s3a://reddit-comments-raw/{year}/comments_{year}_{month}.parquet"
     try:
-        # load data for input range of years:
-        for year in range(start_year, end_year + 1):
-            # Step 1: get dataset URLs
-            base_url = "https://files.pushshift.io/reddit/comments/"
-            url_list = get_file_names(base_url, year)
-            logging.info("STATUS: loading url list ...\n")
-            # Step 2: create subdirectory in Comments S3 Bucket "reddit-comments-raw"
-            response = s3.put_object(Bucket='reddit-comments-raw',
-                                     Body='',
-                                     Key="{0}/".format(year))
-
-            # if Folder Successful created or Exist StatusCode
-            if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-                for url in url_list:
-                    # DOWNLOAD DATASET TO EC2
-                    logging.info("STATUS: downloading dataset... \n")
-                    filename = download_dataset(url)
-                    # UPLOAD DATASET TO S3
-                    if filename:  # if it doesn't return None
-                        logging.info("STATUS: download completed of {0}".format(filename))
-                        logging.info("STATUS: loading Parquet... \n")
-                        destination = "s3a://reddit-comments-raw/{year}/comments_{year}_{month}.parquet".\
-                            format(year=year, month=url[-6:-4])
-                        upload_to_s3(filename, destination)
-                        logging.info("STATUS: deleteing {0} from local ...\n".format(filename))
-                        # DELTE DATASET FROM EC2
-                        delete_files(filename)
-                        # SLEEP - to avoid being blocked (5mins - 300secs)
-                    else:
-                        logging.warning("WARNING: No dataset available...")
-                    
-                    logging.info("STATUS: taking nap zzzzzZZZZZZ....\n")
-                    time.sleep(60)
-            else:
-                logging.warning("WARNING : Directory can not be created")
-        logging.info("STATUS: Completed loading the data....{0}".format(year))
-        return True
+        for year in range(start_year, end_year+1):
+            # list of url
+            url_list = get_file_names(base_url, year, dataset_name)
+            logging.info("STATUS: starting to load the data for....{0}".format(year))
+            load_data_to_S3(year, url_list, bucket_name, destination_address)
+            logging.info("STATUS: Completed loading the data....{0}".format(year))
     except Exception as ex:
-        logging.exception("ERROR uploading data".format(ex))
+        logging.info("error loading the data due to ....{0}".format(ex))
+    return
 
 
 def main(start_year, end_year, sub_or_com):
@@ -193,11 +229,11 @@ def main(start_year, end_year, sub_or_com):
 
 if __name__ == "__main__":
     parser = ArgumentParser(description='Upload dataset to S3')
-    parser.add_argument("--start_year", "-start",
+    parser.add_argument("--start", "-s",
                         dest="start",
                         required=True,
                         help='year to start data loading eg. 2006')
-    parser.add_argument("--end_year", "-end",
+    parser.add_argument("--end", "-e",
                         dest="end",
                         required=True,
                         help='year till which data needs uploading eg. 2009')
@@ -215,7 +251,7 @@ if __name__ == "__main__":
 
     try:
         # Start execution
-        main(start_year, end_year, sub_or_com)        
+        main(start_year, end_year, sub_or_com)
         logging.info("SUCCESS completed loading {0}".format(sub_or_com))
     except Exception as ex:
         logging.info("FAILURE failed to load{0}".format(ex))
