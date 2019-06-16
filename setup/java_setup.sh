@@ -2,7 +2,7 @@
 
 # Setting java environment in JDK
 # update package
-#sudo apt update
+sudo apt update
 
 # Setup JAVA8
 sudo apt install openjdk-8-jdk -y
