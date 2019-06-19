@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Configure a Multi-Node Cassandra Cluster
 # ref: https://www.digitalocean.com/community/tutorials/how-to-configure-a-multi-node-cluster-with-cassandra-on-a-ubuntu-vps
 
@@ -34,6 +35,9 @@ export PATH=$PATH:$CASSANDRA_HOME/bin
 # execute cassandra script
 sudo sh bin/cassandra
 
+# to execute cassandra
+# /usr/local/cassandra/bin$ cqlsh
+sh cassandra/cqlsh
 
 # 2. Set configuration on each node
 # Ensure Cassandra not running
