@@ -2,8 +2,12 @@ import json
 import sys
 import time
 import os
+import boto3
 import logging
-from config import CLEAN_COMMENTS_BUCKET
+from config import (CLEAN_COMMENTS_BUCKET,
+                    FREQUENT_WORDS_BUCKET,
+                    AWS_ACCESS_KEY_ID,
+                    AWS_SECRET_ACCESS_KEY)
 
 import findspark
 findspark.init()
@@ -17,7 +21,10 @@ from pyspark.sql.functions import regexp_replace, trim, col, lower
 from pyspark.sql.functions import split, explode, rank, desc
 from pyspark.sql.window import Window
 
+# S3  client
+s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
+# Spark Object
 spark = SparkSession.builder.appName('Reddit Comments ETL').getOrCreate()
 sqlContext = SQLContext(sparkContext=spark.sparkContext, sparkSession=spark)
 spark.conf.set("spark.sql.session.timeZone", "America/Los_Angeles")
@@ -35,10 +42,30 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w')
 
 
-def get_file_name(year, month):
+def get_read_file_S3(year, month):
+    # file to read from S3
     filename = "{type}_{year}_{month:02d}.parquet".format(type="comments", year=year, month=month)
     source = "s3a://{bucket}/{year}/{file}".format(bucket=CLEAN_COMMENTS_BUCKET, year=year, file=filename)
     return source
+
+
+def get_write_file_S3(year, month):
+    """ generate file name to be read """
+    try:
+        # create subdirectory in Bucket for year:
+        response = s3.put_object(Bucket=FREQUENT_WORDS_BUCKET,
+                                 Body='',
+                                 Key="{0}/".format(year))
+
+        if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+            filename = "{type}_{year}_{month:02d}.parquet".format(type="frequent_words", year=year, month=month)
+            destination = "s3a://{bucket}/{year}/{file}".format(bucket=FREQUENT_WORDS_BUCKET, year=year, file=filename)
+            return destination
+        else:
+            return None
+
+    except Exception as ex:
+        print(ex)
 
 
 def removePunctuation(column):
@@ -88,10 +115,16 @@ def elastic_search_mapper_word(df):
     return final_string
 
 
-def generate_word_count(filename_read_S3):
+def generate_frequent_words(filename_read_S3, filename_wite_S3):
+    """
+    Generate a list of most frequent words for each subreddit.
+
+    :param filename_read_S3: "S3 file location to be read"
+    :param filename_wite_S3: "S3 file to write to"
+    :return: None
+    """
     # get data -
-    logging.info("Step 1: read cleaned file into Dataframe from S3")
-    # comments_df1 = sqlContext.read.parquet(filename_read_S3)
+    print("Step 1: read cleaned file into Dataframe from S3")
     comments_df1 = sqlContext.read.parquet(filename_read_S3)
 
     # select limited columns
@@ -101,7 +134,6 @@ def generate_word_count(filename_read_S3):
     # -------------------------
     # WORD Count
     # -------------------------
-
     print("Step  3: Apply punctuation to a body_without_stopwords")
     comments_df3 = comments_df2.select('subreddit', 'subreddit_id', 'year', 'month',
                                        removePunctuation(col('body_without_stopwords')))
@@ -119,28 +151,31 @@ def generate_word_count(filename_read_S3):
     print("Step 7: Get words with rankin > 5")
     comments_df6 = comments_df5.select('*', rank().over(window).alias('rank')).filter(col('rank') <= 5)
 
-    print(comments_df6.printSchema())
-    print(comments_df6.show(10))
-    """
-    # --------------------------------------------
-    print("Step  18: Generate ND-JSON file for the words")
-    # ---------------------------------------------
-    # Load the Cleaned data to ElasticSearch
-    nd_json_words = comments_df17.rdd.map(lambda x: elastic_search_mapper_word(x)).toDF()
-
-    # save as Text file
-    output_freq_words = "{dir}/frequent_words_{year}_{month}.csv".format(dir=OUTPUT_DIRECTORY, year=input_year,
-                                                                         month=input_month)
-    nd_json_words.saveAsTextFile(output_freq_words)
-    """
+    print("writing data to S3")
+    # ----------------------
+    # Store to S3 - as Parquet
+    # ----------------------
+    print("Step 8: Generate parquet file for the words and load to S3")
+    comments_df6.write.parquet(filename_wite_S3)
+    print("Completed writing data to S3")
+    return
 
 
 def main(year, month):
-    file_read_S3=get_file_name(year, month)
+    # get file name to read from S3
+    file_from_S3=get_read_file_S3(year, month)
+
+    # get file name to write to S4
+    file_to_S3 = get_write_file_S3(year, month)
+
     try:
-        generate_word_count(file_read_S3)
+        # Get frequent words
+        generate_frequent_words(file_from_S3, file_to_S3)
+        print("SUCCESFULL Completed the word calculation")
+        return
     except Exception as ex:
-        print("ERROR -{0}".format(ex))
+        logging.exception("ERROR occured - {0}".format(ex))
+        raise
 
 
 if __name__ == "__main__":
