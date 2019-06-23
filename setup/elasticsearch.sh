@@ -178,3 +178,5 @@ http.port: 9200
 discovery.zen.ping.unicast.hosts: [List of IP] #all other nodes
 
 
+# Instructions - 
+curl -XPOST http://10.0.0.13:9200/subscribers/_bulk?pretty --data-binary @part-00003.txt -H 'Content-Type: application/json'
