@@ -334,6 +334,8 @@ def main(year, month):
     try:
         # start ETL
         spark_transformation_comments(filename_read, filename_write_elastic, filename_write_S3)
+        logging.info("SUCCESSFULLY COMPLETED the ETL pipeline")
+        print("Pipeline completed SUCCESSFULLY")
     except Exception as ex:
         logging.exception("Error Encountered:", ex)
 
