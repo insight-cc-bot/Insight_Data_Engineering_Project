@@ -329,7 +329,7 @@ def main(year, month):
 
     logging.info(filename_write_S3)
 
-    filename_write_elastic = "{dir}/es_body_{year}_{month}.txt".format(dir=OUTPUT_DIRECTORY, year=year, month=month)
+    filename_write_elastic = "{dir}/es_body_{year}_{month:02d}.txt".format(dir=OUTPUT_DIRECTORY, year=year, month=month)
 
     try:
         # start ETL
