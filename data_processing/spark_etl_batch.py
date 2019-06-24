@@ -52,7 +52,7 @@ s3 = boto3.client('s3',
 
 # ===== Logging ========
 TS = time.strftime("%Y-%m-%d:%H-%M-%S")
-log_dir = "./logs/"
+log_dir = "/home/ubuntu/logs/"
 if not os.path.exists(log_dir):
     os.mkdir(log_dir)
 
@@ -66,8 +66,7 @@ logger = logging.basicConfig(level=logging.DEBUG,
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('py4j').setLevel(logging.INFO)  # use setLevel(logging.ERROR) is also fine
 logging.getLogger('pyspark')
-
-logging.info('Task is successful.')
+logger.info('Task is successful.')
 
 # === Set Spark Configs ===
 spark = SparkSession.builder.appName('Reddit Comments ETL').getOrCreate()
@@ -75,12 +74,14 @@ sqlContext = SQLContext(sparkContext=spark.sparkContext, sparkSession=spark)
 spark.conf.set("spark.sql.session.timeZone", "America/Los_Angeles")
 
 # === Set Data Dir ====
-data_dir = "./Data/"
+data_dir = "/home/ubuntu/Data/"
 if not os.path.exists(data_dir):
     os.mkdir(data_dir)
 
+# Setting initial status of ElasticSearch to False
+ES_WRITE_STATUS = False
 
-# TODO: get filename for S3
+
 def get_read_file_S3(year, month=None):
     """ generate file name to be read """
     if month:
@@ -99,7 +100,7 @@ def get_write_file_S3(year, month=None):
         response = s3.put_object(Bucket=CLEAN_COMMENTS_BUCKET,
                                  Body='',
                                  Key="{0}/".format(year))
-        
+
         if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
             filename = "{type}_{year}_{month:02d}.parquet".format(type="comments", year=year, month=month)
             destination = "s3a://{bucket}/{year}/{file}".format(bucket=CLEAN_COMMENTS_BUCKET, year=year, file=filename)
@@ -108,7 +109,7 @@ def get_write_file_S3(year, month=None):
             return None
 
     except Exception as ex:
-        logging.info(ex)
+        logger.info(ex)
 
 
 def trim_link(link):
@@ -164,7 +165,7 @@ def elastic_search_mapper_body(df):
     :param df:
     :return:
     """
-    metadata_json = {"index": {"_index": "comments_{yr}_{m}".format(yr=df.year, m=df.month),
+    metadata_json = {"index": {"_index": "comments_{yr}_{m:02d}".format(yr=df.year, m=df.month),
                                "_type": "comment",
                                "_id": df.id}}
     body_json = dict()
@@ -202,13 +203,13 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
     # ---------------------------------------------
     # -------- BASIC TRANSFORMATIONS --------
     # ----------------------------------------------
-    logging.info("Stage 1: read file into Dataframe from S3")
+    logger.info("Stage 1: read file into Dataframe from S3")
     comments_df1 = sqlContext.read.parquet(filename_read_S3)
 
     columns = comments_df1.columns
-    logging.info("List of columns for Comments - {0}".format(columns))
+    logger.info("List of columns for Comments - {0}".format(columns))
 
-    logging.info("Stage 2: select required columns from data")
+    logger.info("Stage 2: select required columns from data")
     # NOTE: Column "Downs", 'name' isn't available for all years
     # Its available only from 2006-06
     if 'downs' in columns and 'name' in columns:
@@ -220,26 +221,26 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
                                            'parent_id', 'body', 'controversiality', 'distinguished', 'gilded',
                                            'score', 'ups')
 
-    logging.info("Stage 3: Removing rows where post has been deleted , #TODO: Need to include removed")
+    logger.info("Stage 3: Removing rows where post has been deleted , #TODO: Need to include removed")
     comments_df3 = comments_df2.filter(comments_df2['author'] != '[deleted]')
 
     # Create and Register trim_link as UDF
     spark.udf.register("trimlinks", trim_link, StringType())
     trim_link_udf = udf(trim_link)
 
-    logging.info("Stage 4: get submission_id from link_id")
+    logger.info("Stage 4: get submission_id from link_id")
     comments_df4 = comments_df3.withColumn("submission_id", trim_link_udf(col("link_id")))
 
     # ---------------------------------------------
     # -------- FEATURE ENGINEERING ---------------
     # ---------------------------------------------
-    logging.info("Stage 5: Convert 'created_uct' to unix timestamp")
+    logger.info("Stage 5: Convert 'created_uct' to unix timestamp")
     comments_df5 = comments_df4.select('subreddit', 'subreddit_id', 'author', 'id', 'parent_id', 'body',
                                        'controversiality', 'distinguished', 'gilded', 'score', 'ups',
                                        'downs', 'name', 'submission_id',
                                        from_unixtime('created_utc').alias('timestamp'))
 
-    logging.info("Stage 6: Add new features: Year, Month, day, hour, minute, week, julian day")
+    logger.info("Stage 6: Add new features: Year, Month, day, hour, minute, week, julian day")
     comments_df6 = comments_df5.select('subreddit', 'subreddit_id', 'author', 'id', 'parent_id', 'body',
                                        'controversiality', 'distinguished', 'gilded', 'score', 'ups', 'downs', 'name',
                                        'submission_id', year(comments_df5.timestamp).alias('year'),
@@ -259,32 +260,33 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
     # 4. Load NLP cleaned data to S3
     # 5. Load Words to ElasticSearch
     comments_df6.persist(StorageLevel.MEMORY_AND_DISK_SER)
-    logging.info("persisted data after initial cleaning")
+    logger.info("persisted data after initial cleaning")
 
     # -------------------------------------------
     # Write to ElasticSearch: NDJSON file
     # -------------------------------------------
     # Load the Cleaned data to ElasticSearch
-    logging.info("starting transforming data to NDJSON - for Large ES load")
+    logger.info("starting transforming data to NDJSON - for Large ES load")
     nd_json = comments_df6.rdd.map(lambda x: elastic_search_mapper_body(x))
-    logging.info("completed transformation to NDJSON")
+    logger.info("completed transformation to NDJSON")
 
-    logging.info("save data as Text file")
+    logger.info("save data as Text file")
     if not os.path.exists(filename_write_elastic):
         nd_json.saveAsTextFile(filename_write_elastic)
+        ES_WRITE_STATUS=True
     else:
-        logging.info("data already loaded")
+        logger.info("data already loaded")
 
     # ----------------------------
     # NLP transformations Pipeline
     # -----------------------------
-    logging.info("Stage 7: Remove Punctuations")
+    logger.info("Stage 7: Remove Punctuations")
     comments_df7 = comments_df6.select('subreddit', 'subreddit_id', 'author', 'id', 'parent_id', 'body',
                                        'controversiality', 'distinguished', 'gilded', 'score', 'ups', 'downs', 'name',
                                        'submission_id', 'year', 'month', 'day', 'day_of_year', 'hour', 'min',
                                        'week_of_year', removePunctuation(col('body')))
 
-    logging.info("stage 8: Word Tokenization")
+    logger.info("stage 8: Word Tokenization")
     tokenizer = Tokenizer(inputCol="cleaned_body", outputCol="tokenized_body")
     comments_df8 = tokenizer.transform(comments_df7).select('subreddit', 'subreddit_id', 'author', 'id', 'parent_id',
                                                             'body', 'controversiality', 'distinguished', 'gilded',
@@ -293,7 +295,7 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
                                                             'week_of_year', 'tokenized_body')
 
     # StopWords Removal
-    logging.info("Stage 9: Using SPARK default stopwords.")
+    logger.info("Stage 9: Using SPARK default stopwords.")
     remover = StopWordsRemover()
     remover.setInputCol("tokenized_body")
     remover.setOutputCol("no_stop_words_body")
@@ -302,7 +304,7 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
                                                           'score', 'ups', 'downs', 'name', 'submission_id', 'year',
                                                           'month', 'day', 'day_of_year', 'hour', 'min', 'week_of_year',
                                                           'no_stop_words_body')
-    logging.info("Stage 10: Making a Custom list of words")
+    logger.info("Stage 10: Making a Custom list of words")
     # TODO: Get Reddit frequent words
     spark.udf.register("filterExtraStopWords", filter_stop_words, ArrayType(StringType()))
     filter_stop_words_udf = udf(filter_stop_words)
@@ -312,32 +314,38 @@ def spark_transformation_comments(filename_read_S3, filename_write_elastic, file
                                         'month', 'day', 'day_of_year', 'hour', 'min', 'week_of_year',
                                         filter_stop_words_udf("no_stop_words_body").alias("body_without_stopwords"))
 
-    logging.info(comments_df10.printSchema())
+    logger.info(comments_df10.logger.infoSchema())
     # -------------------------
     # Upload Cleaned data to S3
     # -------------------------
     comments_df10.write.parquet(filename_write_S3)
-    logging.info("completed loading the data to S3")
+    logger.info("completed loading the data to S3")
+
+    return
 
 
 def main(year, month):
     # get data from S3 for the requested year / year-month
     filename_read = get_read_file_S3(year, month)
-    logging.info(filename_read)
+    logger.info(filename_read)
 
     filename_write_S3 = get_write_file_S3(year, month)
 
-    logging.info(filename_write_S3)
+    logger.info(filename_write_S3)
 
     filename_write_elastic = "{dir}/es_body_{year}_{month:02d}.txt".format(dir=OUTPUT_DIRECTORY, year=year, month=month)
 
     try:
         # start ETL
+        logger.info(filename_read, filename_write_elastic, filename_write_S3)
         spark_transformation_comments(filename_read, filename_write_elastic, filename_write_S3)
-        logging.info("SUCCESSFULLY COMPLETED the ETL pipeline")
-        print("Pipeline completed SUCCESSFULLY")
+        if ES_WRITE_STATUS:
+            logger.info("good to write to ES")
+
     except Exception as ex:
         logging.exception("Error Encountered:", ex)
+
+    return
 
 
 if __name__ == "__main__":
