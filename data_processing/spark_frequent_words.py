@@ -4,6 +4,7 @@ import time
 import os
 import boto3
 import logging
+from nltk.stem import WordNetLemmatizer
 from config import (CLEAN_COMMENTS_BUCKET,
                     FREQUENT_WORDS_BUCKET,
                     AWS_ACCESS_KEY_ID,
@@ -20,6 +21,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import regexp_replace, trim, col, lower
 from pyspark.sql.functions import split, explode, rank, desc
 from pyspark.sql.window import Window
+from pyspark.sql.types import ArrayType, StringType, IntegerType
 
 # S3  client
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
@@ -38,8 +40,22 @@ TS = time.strftime("%Y-%m-%d:%H-%M-%S")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M',
-                    filename=log_dir + "data_ingestion" + str(TS) + ".log",
+                    filename=log_dir + "identify_frequent_words" + str(TS) + ".log",
                     filemode='w')
+
+#Instantiate lammatizer
+lemmatizer = WordNetLemmatizer()
+
+
+def lemma(words_list):
+    """
+    Custom: Generate word lemma, help to reduce total words
+    """
+    out_words = list()
+    for word in words_list.split(' '):
+        w_lemma = lemmatizer.lemmatize(word)        
+        out_words.append(w_lemma)
+    return list(set(out_words))
 
 
 def get_read_file_S3(year, month):
@@ -138,10 +154,24 @@ def generate_frequent_words(filename_read_S3, filename_wite_S3):
     comments_df3 = comments_df2.select('subreddit', 'subreddit_id', 'year', 'month',
                                        removePunctuation(col('body_without_stopwords')))
 
-    print("Step  4: Split lines to words to generate the count")
-    comments_df4 = (comments_df3.select(explode(split(comments_df3.cleaned_body, ' ')).alias('word'),
-                                        'subreddit', 'subreddit_id', 'year', 'month').where(col('word') != ''))
+    print("Step 3.1: Apply word lemmatization to generate base words")
+    # register UDF
+    spark.udf.register("lemma", lemma, ArrayType(StringType()))
+    lemma_udf = udf(lemma)
+    # run transformation
+    comments_df31 = comments_df3.withColumn("lemmatized_body", lemma_udf(col("cleaned_body")))
+    print(comments_df31.printSchema())
 
+    # remove punctuations again
+    comments_df32 = comments_df31.select('subreddit', 'subreddit_id', 'year', 'month',
+                                       removePunctuation(col('lemmatized_body')))
+
+    print("Step  4: Split lines to words to generate the count")
+    comments_df4 = (comments_df31.select(explode(split(comments_df31.cleaned_body, ' ')).alias('word'),
+        'subreddit', 'subreddit_id', 'year', 'month').where(col('word') != ''))
+    
+    print(comments_df4.printSchema())
+    
     print("Step  5: Get WordCount")
     comments_df5 = wordCount(comments_df4).orderBy("count", ascending=False)
 
@@ -156,7 +186,7 @@ def generate_frequent_words(filename_read_S3, filename_wite_S3):
     # Store to S3 - as Parquet
     # ----------------------
     print("Step 8: Generate parquet file for the words and load to S3")
-    comments_df6.write.parquet(filename_wite_S3)
+    comments_df6.write.parquet(filename_wite_S3)    
     print("Completed writing data to S3")
     return
 
