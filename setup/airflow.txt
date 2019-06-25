@@ -1,0 +1,37 @@
+"""
+Tasks to automate - 
+
+Task 1: Automate Data Cleaning and Word Generation
+1. Run Spark - Cleaning <may be store locally>
+2. Run Load to ElasticSearch
+
+Task2: Run Frequent Words
+1. Run Spark - Word Count
+2. Run Postgres population
+
+Task3: Load Redshift every hour/
+""" 
+# --------
+# Instructions to follow while setting up Airflow
+# https://airflow.apache.org/tutorial.html
+# --------
+
+#INSTALLATION - 
+pip3 install apache-airflow
+
+# initialize airflow database
+airflow initdb
+
+# create dag "xyz.py" and Run dag 
+python ~/airflow/dags/xyz.py
+
+# print the list of active DAGs - this should show the dags
+airflow list_dags
+
+# prints the list of tasks in the "tutorial" dag_id, (not name of job)
+airflow list_tasks tutorial
+
+# host - 
+localhost:8090 # change aiflow.cfg
+
+
