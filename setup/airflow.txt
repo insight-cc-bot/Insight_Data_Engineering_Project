@@ -14,6 +14,7 @@ Task3: Load Redshift every hour/
 # --------
 # Instructions to follow while setting up Airflow
 # https://airflow.apache.org/tutorial.html
+# http://michal.karzynski.pl/blog/2017/03/19/developing-workflows-with-apache-airflow/
 # --------
 
 #INSTALLATION - 
@@ -32,6 +33,7 @@ airflow list_dags
 airflow list_tasks tutorial
 
 # host - 
-localhost:8090 # change aiflow.cfg
+localhost:8090 # configured to 8090 from default 8080 <aiflow.cfg>
 
-
+# launch webserver
+airflow webserver # elastic_ip:8090
