@@ -37,3 +37,6 @@ localhost:8090 # configured to 8090 from default 8080 <aiflow.cfg>
 
 # launch webserver
 airflow webserver # elastic_ip:8090
+
+# run the scheduler to start the schedule
+airflow scheduler
