@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> ea3e50c1915283ac8623b1dc50a968e7359cf478
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -31,11 +34,17 @@
       </li>
 
     </ul>
+<<<<<<< HEAD
       <!--
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       -->
+=======
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+>>>>>>> ea3e50c1915283ac8623b1dc50a968e7359cf478
     </form>
   </div>
 </nav>
@@ -54,11 +63,16 @@
         <br/>
 
         <form method="POST" action="/redditinsight/get_tags">
+<<<<<<< HEAD
             <!-- Text Area
+=======
+            <!-- Text Area-->
+>>>>>>> ea3e50c1915283ac8623b1dc50a968e7359cf478
             <div class="form-group">
                 <label><strong>Enter Subreddit Name</strong></label>
             <textarea type="text" rows="1" cols="1" class="form-control" name="subreddit" required="true">Please Enter Subreddit Name!!</textarea>
             <br/>
+<<<<<<< HEAD
             -->
                 <!-- Selection Boxes-->
                 <label><strong>Select Subreddit Name</strong></label>
@@ -156,6 +170,49 @@
 
 
             <p><strong>Subreddit Posts:{{num_of_results_links}}</strong></p>
+=======
+
+              <!--  <form method="POST" action="/redditinsight/get_tags"> -->
+            <!-- Text Area-->
+            <div class="form-group">
+                <label><strong>Enter Year</strong></label>
+            <textarea type="text" rows="1" cols="1" class="form-control" name="year" required="true">Please enter Year!!</textarea>
+            <br/>
+            </div>
+                <!--</form>-->
+
+                <!--<form method="POST" action="/redditinsight/get_tags">-->
+            <!-- Text Area-->
+            <div class="form-group">
+                <label><strong>Enter Month</strong></label>
+            <textarea type="text" rows="1" cols="1" class="form-control" name="month" required="true">Please enter month!!</textarea>
+            <br/>
+            </div>
+                <!--</form>-->
+
+
+			</select>
+			<br/>
+            <button type="reset" class="btn btn-primary"><i class="fa fa-eraser"></i> Clear</button>
+            <button type="gettags" class="btn btn-info"><i class="fa fa-database"></i> gettags</button>
+                <button type="getlinks" class="btn btn-info"><i class="fa fa-database"></i> getlinks</button>
+
+        </div>
+        </form>
+    </div>
+
+
+
+    <div class="container">
+    	<div class="alert alert-success" role="alert">
+        <p class="alert-heading">Result</p>
+        <p>Subreddit Tags:{{num_of_results}}</p>
+        <ul>{% for i in results %}
+        	<li>{{i}}</li>
+        	{%endfor %}
+    	</ul>
+            <p>Posts related to Tags:{{num_of_results_links}}</p>
+>>>>>>> ea3e50c1915283ac8623b1dc50a968e7359cf478
             <ul>{% for i in results_links %}
                 <li>{{i}}</li>
         	{%endfor %}
@@ -166,6 +223,9 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<<<<<<< HEAD
 <script src="~/Scripts/jquery-2.1.4.js"></script>
+=======
+>>>>>>> ea3e50c1915283ac8623b1dc50a968e7359cf478
 </body>
 </html>
