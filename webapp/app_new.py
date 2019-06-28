@@ -36,11 +36,12 @@ def handle_postges(text_field,year_field,month_field):
 
         # execute query
         word_list = cursor.fetchmany(10)
-        #print("word_list", word_list)
+        print("word_list", word_list)
 
         result_list=[word[0] for word in word_list]
-        #print("result_list",result_list)
+        print("result_list",result_list)
 
+        #print(result_list)
         # close connection
         connection.commit()
 
@@ -126,11 +127,25 @@ def process():
             for submission in reddit.subreddit(text_field).top(limit=10):
                 reddit_data.append(submission.title)
 
-            return render_template("index.html", results=word_list, results_links=reddit_data)
+            #return render_template("index.html", results=word_list, results_links=reddit_data)
         except:
             print("Please select values from all the drop downs")
-            return render_template("index.html", results=word_list, results_links=reddit_data)
 
+        return render_template("index.html", results=word_list, results_links=reddit_data)
+
+
+
+@app.route('/redditinsight/get_tags', methods=['POST'])
+def process_topics():
+    if request.method == 'POST':
+        # get results from elasticsearch
+        filtered_posts = handle_elasticsearch("l33t", "2008", "2", "word")
+        print("hello_world")
+
+    return render_template("index.html", results_links=filtered_posts)
+
+
+"""
 
 @app.route('/background_process_test')
 def background_process_test():
@@ -155,6 +170,7 @@ def get_filtered_posts():
     return render_template("index.html", filtered_links=s)
     #filtered_links=filtered_posts
 
+"""
 
 # ---- Home -----
 # ----------------
