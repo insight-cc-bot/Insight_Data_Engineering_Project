@@ -17,7 +17,7 @@ MONTH = 5
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2019, 6, 27),
+    "start_date": datetime(2016, 1, 1),
     "email": ["mehta.dhananjay28@gmail.com"],
     "email_on_failure": True,
     "email_on_retry": False,    
@@ -89,7 +89,8 @@ def elastic_search_load():
 
 
 # instantiate DAG
-dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval=timedelta(days=1))
+#dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval=timedelta(days=1))
+dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval='@hourly')
 
 # set tasks
 dir_job = PythonOperator(
