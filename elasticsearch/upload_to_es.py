@@ -3,7 +3,13 @@ import sys
 
 """
 curl -XGET 'http://10.0.0.6:9200/_cluster/health?pretty'
-curl -XGET  ‘http://ec2-54-200-253-96.us-west-2.compute.amazonaws.com:9200/_cluster/health?pretty'
+curl -XGET  'http://ec2-54-200-253-96.us-west-2.compute.amazonaws.com:9200/_cluster/health?pretty'
+
+# Cluster 1:10.0.0.6:9200 
+curl -XGET  'http://ec2-54-200-253-96.us-west-2.compute.amazonaws.com:9200/_cluster/health?pretty'
+
+# Cluster 1:10.0.0.9:9200
+curl -XGET  'http://ec2-34-216-114-106.us-west-2.compute.amazonaws.com:9200/_cluster/health?pretty'
 """
 cluster_conf = {"elastic_search_data": "/home/ubuntu/spark-warehouse/Data", "elastic_search_IP1": "10.0.0.6", "elastic_search_port": "9200", "elastic_search_IP2": "10.0.0.8"}
 
@@ -34,7 +40,7 @@ def load_to_elastic(filename, files_path):
         ip_address = cluster_conf["elastic_search_IP1"]
     else:
         ip_address = cluster_conf["elastic_search_IP2"]
-    file_to_load=("{0}/{1}").format(files_path, filename)
+    file_to_load = "{0}/{1}".format(files_path, filename)
     es_command = "curl -XPOST http://{ip}:{port}/subscribers/_bulk?pretty --data-binary @{file} -H 'Content-Type: application/json'".format(ip=ip_address, port=port, file=file_to_load)
     print(es_command)
     os.system(es_command)
@@ -46,7 +52,7 @@ def elastic_search_load(year):
     directory_list = [_dir for _dir in os.listdir(data_dir) if _dir[:2] == "es"]
     try:
         for _dir in directory_list[:2]:
-            files_path = "{0}.{1}".format(data_dir,_dir)
+            files_path = "{0}/{1}".format(data_dir,_dir)
             #print(dir_path)
             files_list = [f for f in os.listdir(files_path) if f[:4] == "part"]
             for _file in files_list:
