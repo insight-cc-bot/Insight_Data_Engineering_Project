@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSS Template</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.left {
+  background-color: #bcddff;
+  float: left;
+  width: 23%;
+  padding: 0px 15px;
+  margin-top: 10px;
+  border: 3px solid #383838;
+}
+.right {
+  background-color: #bcddff;
+  float: right;
+  width: 23%;
+  padding: 0px 15px;
+  margin-top: 10px;
+  border: 3px solid #383838;
+}
+
+.center {
+  float: left;
+  padding: 0 15px;
+  width: 54%;
+  background-color: #f1f1f1;
+  height: 955px; /* only for demonstration, should be removed */
+}
+
+.button {
+  background-color: #008CBA; /* Blue */
+  border: 1px solid #383838;
+  color: white;
+  padding: 0px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+  height:40px;
+  width:90px
+}
+.form-control{
+  height: 35px;
+  width: 120px;
+  font-size: 16px;
+  padding: 10px 10px;
+}
+
+.image1{
+  height:60%;  
+  width:50%;
+  font-size: 16px;
+  padding: 10px 10px;
+
+}
+.image2{
+  height: 80%;  
+  width:70%;
+  font-size: 16px;
+  padding: 10px 10px;
+
+}
+/* Style the header */
+header {
+  background-color: #c3cadd;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 45px;
+  color: black;
+  border: 3px solid #383838;
+  background-image: url("/Users/dm/Desktop/insight_html/static/images/reddit_header.jpg");    
+  height: 250px;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 30%;
+  height: 300px; /* only for demonstration, should be removed */
+  background: #ccc;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+
+
+/* Clear floats after the columns */
+section:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: #777;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+
+<header>
+  <!--<img src="./reddit_logo_head.png" style="width:10%">-->  
+</header>
+
+<section>   
+  <div class="left">
+    <div class="main1">
+    <form method="POST" action="/redditinsight/get_tags">  
+            <br/>
+                <!-- Selection Boxes-->
+            <label><strong>Select Subreddit</strong></label>
+            <select class="form-control" name="taskoption1">
+                <option selected>Please select</option>
+                <option value=worldpolitics>worldpolitics</option>
+                <option value=howto>howto</option>
+                <option value=Pets>Pets</option>
+                <option value=history>history</option>
+                <option value=food>food</option>
+                <option value=Anarchism>Anarchism</option>
+                <option value=Christianity>Christianity</option>
+            </select>
+            <br/>
+            <br/>
+            <label><strong>Select Year</strong></label>
+            <select class="form-control" name="taskoption2">
+                <option selected>Please select</option>
+                <option value=2008>2008</option>
+                <option value=2009>2009</option>
+                <option value=2010>2010</option>
+                <option value=2011>2011</option>
+                <option value=2012>2012</option>
+                <option value=2013>2013</option>
+                <option value=2014>2014</option>
+                <option value=2015>2015</option>
+                <option value=2016>2016</option>
+              
+            </select>
+            <br/>
+            <br/>
+                <label><strong>Select Month</strong></label>
+                <select class="form-control" name="taskoption3">
+                <option selected>Please select</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+                <option value=11>11</option>
+                <option value=12>12</option>
+
+            </select>
+            <br/>
+            <br/>
+
+            <div style="text-align:center">
+            <button type="gettags" class="button">Get Tags</button>
+          </div>
+            <!--<button type="getlinks" class="btn btn-info"><i class="fa fa-database"></i> getlinks</button> -->
+        </form>
+  </div>
+    <h2>Why?</h2>
+    <p><li>Do you wana keep up with the community?</li>
+      <li>You don't have time to read all the posts?</li>
+      <li>You aren't sure of what tags to search for?</li>
+    </p>
+    <h2>How?</h2>
+    <p><li>Its <b>simple</b>, just select the subreddit, year, month and you will get the popular tags from your community.</li>
+      <li>If you want to deep dive on the tags, just click on your favorite tags and you will see all the related posts.</li></p>
+  <!--img src="static/images/left_snoo.png" style="width:30%"> -->
+  <img class="image1", src="{{url_for('static', filename='images/left_snoo.png')}}" >
+  <!--"{{url_for('static', filename='ayrton_senna_movie_wallpaper_by_bashgfx-d4cm6x6.jpg')}}" />-->
+  </div>
+
+  <div class="right">
+    <form action="/redditinsight/get_posts" method="POST">        
+        <h2 style="color: #ff2f0b"><strong>Subreddit : {{subreddit_name}}</strong></h2>
+        <h3><strong>Tags:</strong></h3>
+        <ul>{%for i in results%}</ul>
+             <!--<a class={{i}} data-filter="all" href="#" role="button">{{i}}</a>-->
+         <!--<button type="button"  class="btn btn-primary" onclick="filterSelection(\'' + {{i}} + '\')"><li>{{i}}</li></button>-->
+         <button name="topic" type="submit"  class="button" value={{i}}>{{i}}</button>
+          {%endfor %} 
+        </form>
+
+    <h2>Tags?</h2>
+    <p>These are the popular things that people are talking in your community.This can include popular places, events, personalities etc. No more <b>FOMO</b>, Snoo got your back!!</p>
+    <h2>What?</h2>
+    <p>Click on your favorite tag and get a list of associated post!!</p>
+    <!--<img src="./reddit_snoo.jpg" style="width:100%">-->    
+    <img class="image2", src="{{url_for('static', filename='images/right_snoo.png')}}" >
+  </div>
+  
+  <article class="center">
+    <h2><strong>Subreddit - {{subreddit_name}} </strong></h2>
+    <table class="table" style="border: 2px solid #383838;">
+    <thead><tr style="border: 1px solid #383838;"><th>Posts</th></tr></thead>
+      <ul>{% for i in results_links %}          
+      <tbody>
+        <tr><td style="border: 1px solid #383838;">{{i}}</td></tr>
+          {%endfor %}
+        </ul> 
+      </tbody>
+    </table>
+<!--
+    <h1>Top Posts:</h1>
+            <ul>{% for i in results_links %}
+                <li>{{i}}</li>
+          {%endfor %}
+          </ul> -->
+  </article>
+</section>
+
+<footer>
+  <p>Amanpreet Kaur, Insight Data Engineering</p>
+</footer>
+
+</body>
+</html>
