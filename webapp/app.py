@@ -134,15 +134,17 @@ def get_filtered_posts():
     if request.method == 'POST':
         topic=request.form['topic']
         # get results from Elastic
-        filtered_posts=handle_elasticsearch(subreddit_state["subreddit_name"][0], subreddit_state["year"][0],
-                                            subreddit_state["month"], topic)
 
-        return render_template("index.html",
-                               subreddit_name= subreddit_state["subreddit_name"][0],
-                               results=subreddit_state["tags"],
-                               results_links=filtered_posts)
-    else:
-        return 404
+        try:
+            filtered_posts=handle_elasticsearch(subreddit_state["subreddit_name"][0], subreddit_state["year"][0],
+                                                subreddit_state["month"], topic)
+
+            return render_template("index.html",
+                                subreddit_name= subreddit_state["subreddit_name"][0],
+                                results=subreddit_state["tags"],
+                                results_links=filtered_posts)
+        except:
+            return 404
 
 
 # -----------------------
