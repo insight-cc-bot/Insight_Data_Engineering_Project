@@ -1,5 +1,9 @@
 """
 # Spark ETL DAG
+# Perform following tasks -
+1. Set up correct directory structure
+2. Run ETL task for NLP pipeline
+3. Upload cleaned data to Elasticsearch
 """
 
 from airflow import DAG
