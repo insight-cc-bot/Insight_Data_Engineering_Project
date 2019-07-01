@@ -16,9 +16,10 @@ def get_formatted_data(year, start, end):
 
     for mth in range(start, end+1):
         command = "python spark_elasticsearch.py {0} {1} {2}".format(year, mth, data_dir)
+
         try:
             print(command)
-            #os.system(command)
+            os.system(command)
             print("done generating data", year, mth)
         except Exception as ex:
             print(ex)
@@ -27,16 +28,16 @@ def get_formatted_data(year, start, end):
 
 
 # Step2. Load files to ElasticSearch
-def load_to_elastic(filename):
+def load_to_elastic(filename, files_path):
     port = cluster_conf["elastic_search_port"]
     if year in (2008, 2010, 2011):
         ip_address = cluster_conf["elastic_search_IP1"]
     else:
         ip_address = cluster_conf["elastic_search_IP2"]
-    print(filename)
-    es_command = "curl -XPOST http://{ip}:{port}/subscribers/_bulk?pretty --data-binary @{file} -H 'Content-Type: application/json'".format(ip=ip_address, port=port, file=filename)
+    file_to_load=("{0}/{1}").format(files_path, filename)
+    es_command = "curl -XPOST http://{ip}:{port}/subscribers/_bulk?pretty --data-binary @{file} -H 'Content-Type: application/json'".format(ip=ip_address, port=port, file=file_to_load)
     print(es_command)
-    #os.system(command)
+    os.system(es_command)
     return
 
 
@@ -45,11 +46,11 @@ def elastic_search_load(year):
     directory_list = [_dir for _dir in os.listdir(data_dir) if _dir[:2] == "es"]
     try:
         for _dir in directory_list[:2]:
-            dir_path = "/home/ubuntu/spark-warehouse/Data/{0}".format(_dir)
-            print(dir_path)
-            files_list = [f for f in os.listdir(dir_path) if f[:4] == "part"]
+            files_path = "{0}.{1}".format(data_dir,_dir)
+            #print(dir_path)
+            files_list = [f for f in os.listdir(files_path) if f[:4] == "part"]
             for _file in files_list:
-                load_to_elastic(_file)
+                load_to_elastic(_file, files_path)
     except Exception as ex:
         print(ex)
         pass
@@ -65,4 +66,4 @@ if __name__ == '__main__':
         if load_status:
             elastic_search_load(year)
     except Exception as ex:
-        print("ERROR:",ex)
+        print("ERROR:", ex)
