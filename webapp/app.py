@@ -3,6 +3,15 @@ from flask import Flask, jsonify, request, make_response, url_for
 import psycopg2
 import praw
 from elasticsearch import Elasticsearch
+from .config import (user,
+password,
+host,
+port,
+database,
+client_id,
+client_secret,
+user_agent)
+
 
 # Flask App
 app = Flask(__name__, static_url_path='/Users/dm/Desktop/insight_html/static')
@@ -11,8 +20,8 @@ app = Flask(__name__, static_url_path='/Users/dm/Desktop/insight_html/static')
 es = Elasticsearch([{'host': '54.212.124.15', 'port': 9200}])
 
 # REDDIT CLIENT
-reddit = praw.Reddit(client_id="MwBq5YRdgQZbbQ", client_secret="zoBtH3BMCINonQbseGvslik6j7A",
-                        user_agent="reddit_tags")
+reddit = praw.Reddit(client_id=client_id, client_secret=client_secret,
+                        user_agent=user_agent)
 
 # default list of 15 recent posts from Reddit -
 reddit_posts = [submission.title for submission in reddit.subreddit('all').hot(limit=30)]
@@ -34,11 +43,11 @@ def handle_postges(subreddit_name ,year, month):
     """
     try:
         # set connection
-        connection = psycopg2.connect(user="webuiuser",
-                                      password="webuiuser",
-                                      host="ec2-54-214-117-182.us-west-2.compute.amazonaws.com",
-                                      port="5432",
-                                      database="reddit")
+        connection = psycopg2.connect(user=user,
+                                      password=password,
+                                      host=host,
+                                      port=port,
+                                      database=database)
         # set cursor
         cursor = connection.cursor()
         # query
@@ -178,4 +187,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port="80", host="0.0.0.0", debug=True)

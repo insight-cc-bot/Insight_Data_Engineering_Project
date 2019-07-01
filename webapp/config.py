@@ -1,0 +1,8 @@
+user="webuiuser"
+password="webuiuser"
+host="ec2-54-214-117-182.us-west-2.compute.amazonaws.com"
+port="5432"
+database="reddit"
+client_id="MwBq5YRdgQZbbQ"
+client_secret="zoBtH3BMCINonQbseGvslik6j7A"
+user_agent="reddit_tags"
