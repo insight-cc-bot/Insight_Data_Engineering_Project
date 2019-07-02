@@ -41,7 +41,6 @@ def elastic_search_load(data_dir, year, month):
 				print(ex)
 				pass
 
-
 if __name__ == '__main__':
 	year = int(sys.argv[1])
 	month = int(sys.argv[2])
