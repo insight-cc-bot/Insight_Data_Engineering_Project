@@ -1,4 +1,7 @@
 def load_to_elastic(filename):
+	"""
+	Perform bulk upload to ElasticSearch in batch size of 400 records (200 recs in ND-JSON)
+	"""
 	batch=list()
 	cnt=0
 	print(filename)
@@ -21,9 +24,9 @@ def elastic_search_load(data_dir, year, month):
 	if month>0:
 		directory = "{dir}/es_body_{yr}_{mn:02}/".format(dir=data_dir,yr=year,mn=month)
 		files_list = [f for f in os.listdir(files_path) if f[:4] == "part"]
-				# load each file
-				for _file in files_list:
-					load_to_elastic(year, _file, files_path)
+		# load each file
+		for _file in files_list:
+			load_to_elastic(year, _file, files_path)
 	else:
 		directory_list = [_dir for _dir in os.listdir(data_dir) if _dir[:2] == "es"]
 		for _dir in directory_list:
@@ -33,15 +36,15 @@ def elastic_search_load(data_dir, year, month):
 				files_list = [f for f in os.listdir(files_path) if f[:4] == "part"]
 				# load each file
 				for _file in files_list:
-					load_to_elastic(year, _file, files_path)
+				load_to_elastic(year, _file, files_path)
 			except Exception as ex:
 				print(ex)
 				pass
 
 
 if __name__ == '__main__':
-    year = int(sys.argv[1])
-    month = int(sys.argv[2])
-    try:
-        dir = "/home/ubuntu/spark-warehouse/Data/{0}".fomat(year)
-        elastic_search_load(dir, year, month)
+	year = int(sys.argv[1])
+	month = int(sys.argv[2])
+	try:
+		dir = "/home/ubuntu/spark-warehouse/Data/{0}".fomat(year)
+		elastic_search_load(dir, year, month)
