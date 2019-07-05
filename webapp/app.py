@@ -40,6 +40,8 @@ app = Flask(__name__, static_url_path='/Users/dm/Desktop/insight_html/static')
 
 # ELASTIC SEARCH Client
 #es = Elasticsearch([{'host': '54.212.124.15', 'port': 9200}])
+es1 = Elasticsearch([{'host': '10.0.0.6', 'port': 9200}])
+es2 = Elasticsearch([{'host': '10.0.0.8', 'port': 9200}])
 
 # REDDIT CLIENT
 reddit = praw.Reddit(client_id=client_id, client_secret=client_secret,
@@ -55,7 +57,7 @@ subreddit_state={
     "tags":None
 }
 
-def handle_postges(subreddit_name ,year, month):
+def handle_postgres(subreddit_name ,year, month):
     """
     Fetch data from Postgres
     :param text_field:
@@ -96,6 +98,11 @@ def handle_postges(subreddit_name ,year, month):
 
 
 def handle_elasticsearch(subreddit_name, input_year, input_month, topic):
+    year_list=[2008,2009,2010]
+    if input_year in year_list:
+        es=es1
+    else:
+        es=es2
     logging.info("ElasticSearch QUERY- {0}, {1}, {2}, {3}".format(subreddit_name, input_year, input_month, topic))    
     start_time = timeit.default_timer()
     res = es.search(index="comments_{0}".format(input_year),
@@ -191,17 +198,20 @@ def process():
         inp_year = request.form['taskoption2'].strip()
         inp_month = request.form['taskoption3'].strip()
         if not subreddit_name or not inp_year or not inp_month:
-          return render_template("index.html", subreddit_name= "Oops!! Something is missing.")
+          return render_template("index.html", subreddit_name= "Oops!! Something's missing, calling SNOOOO for resque. Please make sure you have selected the items from drop-down.")
         # initialize the submission
         subreddit_state["subreddit_name"]= subreddit_name,
-        subreddit_state["year"]= int(inp_year),
-        subreddit_state["month"]= int(inp_month)
+        try:
+          subreddit_state["year"]= int(inp_year),
+          subreddit_state["month"]= int(inp_month)
+        except:
+          pass
         # defaults
         reddit_posts = []
         word_list=[]
         try:
             # fetch data from database
-            word_list = handle_postges(subreddit_name,inp_year,inp_month)
+            word_list = handle_postgres(subreddit_name,inp_year,inp_month)
             if len(word_list) == 0:
                 word_list.append("There_are_no_tags_in_this_Subreddit")
 
@@ -210,7 +220,7 @@ def process():
                 reddit_posts.append(submission.title)
             return render_template("index.html", subreddit_name= subreddit_state["subreddit_name"][0], results=word_list, results_links=reddit_posts)
         except:
-            return render_template("index.html", subreddit_name= subreddit_state["subreddit_name"][0], results=word_list, results_links=["SORRY!! Something's missing. Calling SNOOOO for resque"])
+            return render_template("index.html", subreddit_name= subreddit_state["subreddit_name"][0], results=word_list, results_links=["SORRY!! Something's missing, calling SNOOOO for resque. Please make sure you have selected the items from drop-down."])
 
 
 
