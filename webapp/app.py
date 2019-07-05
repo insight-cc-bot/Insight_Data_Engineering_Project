@@ -2,8 +2,13 @@ from flask import render_template
 from flask import Flask, jsonify, request, make_response, url_for
 import psycopg2
 import praw
+import logging
 from elasticsearch import Elasticsearch
-from .config import (user,
+from datetime import datetime
+import timeit
+import time
+import os
+from config import (user,
 password,
 host,
 port,
@@ -13,11 +18,28 @@ client_secret,
 user_agent)
 
 
+now=datetime.now()
+# ===== Logging ========
+TS = time.strftime("%Y-%m-%d:%H-%M-%S")
+log_dir = "./logs/{0}_{1}_{2}".format(now.year, now.month, now.day)
+
+if not os.path.exists(log_dir):
+    os.mkdir(log_dir)
+
+
+logger = logging.basicConfig(level=logging.DEBUG,
+                             format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                             datefmt='%m-%d %H:%M',
+                             filename=log_dir + "reddit_insights" + str(TS) + ".log",
+                             filemode='w')
+logging.basicConfig(level=logging.DEBUG)
+
+
 # Flask App
 app = Flask(__name__, static_url_path='/Users/dm/Desktop/insight_html/static')
 
 # ELASTIC SEARCH Client
-es = Elasticsearch([{'host': '54.212.124.15', 'port': 9200}])
+#es = Elasticsearch([{'host': '54.212.124.15', 'port': 9200}])
 
 # REDDIT CLIENT
 reddit = praw.Reddit(client_id=client_id, client_secret=client_secret,
@@ -68,13 +90,15 @@ def handle_postges(subreddit_name ,year, month):
         if (connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
+            logging.info("PostgreSQL connection is closed")
 
     return result_list
 
 
 def handle_elasticsearch(subreddit_name, input_year, input_month, topic):
-    res = es.search(index="comments_{0}_{1:02d}".format(input_year, input_month),
+    logging.info("ElasticSearch QUERY- {0}, {1}, {2}, {3}".format(subreddit_name, input_year, input_month, topic))    
+    start_time = timeit.default_timer()
+    res = es.search(index="comments_{0}".format(input_year),
                     body={"from": 0,
                           "size": 10,
                           "query":
@@ -89,7 +113,10 @@ def handle_elasticsearch(subreddit_name, input_year, input_month, topic):
                           }
                           }
                     )
-
+    end_time=timeit.default_timer()
+    query_latency=end_time-start_time
+    print(query_latency)
+    logging.info("ElasticSearch query time - {0}".format(query_latency))
     No_of_hits = res['hits']['total']['value']
     results_links = list()
     for hit in res['hits']['hits']:
@@ -135,6 +162,8 @@ def get_filtered_posts():
         topic=request.form['topic']
         # get results from Elastic
 
+        if not subreddit_state["subreddit_name"] or not subreddit_state["year"] or not subreddit_state["month"]:
+          return render_template("index.html", subreddit_name= "Oops!! Something is missing.") 
         try:
             filtered_posts=handle_elasticsearch(subreddit_state["subreddit_name"][0], subreddit_state["year"][0],
                                                 subreddit_state["month"], topic)
@@ -144,7 +173,10 @@ def get_filtered_posts():
                                 results=subreddit_state["tags"],
                                 results_links=filtered_posts)
         except:
-            return 404
+            return render_template("index.html",
+                                subreddit_name= subreddit_state["subreddit_name"][0],
+                                results=subreddit_state["tags"],
+                                results_links=["SORRY!! Something's missing. Calling SNOOOO for resque"])
 
 
 # -----------------------
@@ -158,7 +190,8 @@ def process():
         subreddit_name = request.form['taskoption1'].strip().lower()
         inp_year = request.form['taskoption2'].strip()
         inp_month = request.form['taskoption3'].strip()
-
+        if not subreddit_name or not inp_year or not inp_month:
+          return render_template("index.html", subreddit_name= "Oops!! Something is missing.")
         # initialize the submission
         subreddit_state["subreddit_name"]= subreddit_name,
         subreddit_state["year"]= int(inp_year),
@@ -177,7 +210,8 @@ def process():
                 reddit_posts.append(submission.title)
             return render_template("index.html", subreddit_name= subreddit_state["subreddit_name"][0], results=word_list, results_links=reddit_posts)
         except:
-            return 412
+            return render_template("index.html", subreddit_name= subreddit_state["subreddit_name"][0], results=word_list, results_links=["SORRY!! Something's missing. Calling SNOOOO for resque"])
+
 
 
 # ---- Home -----
