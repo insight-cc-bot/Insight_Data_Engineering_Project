@@ -33,7 +33,7 @@ Schema - <img>
 > `Raw Comments`: Data taken from source, `Cleaned Comments`: Data generated after initial preprocessing, `Frequent Words`: Tags identified from the posts
 
 ### `Data Pipeline`
-<img src="./images/pipeline.png" width="800">
+<img src="./img/pipeline.png" width="800">
 ### `Cluster Setup`
 
 ### ``Engineering Challenge:`` 
