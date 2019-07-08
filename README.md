@@ -30,12 +30,10 @@ In addition to improving the user experience, the tags can also be helpful for `
 2. Size: 500 GB (taken from 2008 - 2015 for comments)
 Schema - <img>
 3. Data Stored in AWS S3 data lake in three separate buckets - 
-> Raw Comments: Data taken from source
-> Cleaned Comments: Data generated after initial preprocessing
-> Frequent Words: Tags identified from the posts
+> `Raw Comments`: Data taken from source, `Cleaned Comments`: Data generated after initial preprocessing, `Frequent Words`: Tags identified from the posts
 
 ### `Data Pipeline`
-
+<img src="./images/pipeline.png" width="800">
 ### `Cluster Setup`
 
 ### ``Engineering Challenge:`` 
