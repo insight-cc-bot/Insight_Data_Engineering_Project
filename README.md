@@ -34,10 +34,25 @@ Schema - <img>
 
 ### `Data Pipeline`
 <img src="./img/pipeline.png" width="800">
+
+**1. AWS S3:** Serve as datalake
+<img src="./img/S3.png" width="800">
+
+**2. Spark:** 4 node cluster, 1 master-3workers. I have written two separate pipelines on Spark, One to clean the text data, second to generate frequent tags from the cleaned data. 
+<img src="./img/spark-transformation.png" width="800">
+
+**3. Elasticsearch:** Indexed comments data on Elasticsearch. Used Spark to transform data into NDJSON format and then loaded on ES using bulk upload API. Comments were indexed by year. Latency to query indexes vary from .15 second to 1.35 seconds with variation in index size. 
+
+**4. Airflow:** My cluster has used 
+<img src="./img/airflow.png" width="800">
+
+**5. Postgres:**
+<img src="./img/postgres.png" width="400">
+
 ### `Cluster Setup`
+The cluster was set up on AWS. All the services used in this project were set up by myself. I didn't use any `managed services` as they are very expensive and difficult to debug if you run into any errors. I used about 9 `m4.large` EC2 instances for the cluster.
 
 ### ``Engineering Challenge:`` 
-
 1. Indexing posts for generated tags to reduce search complexity of  O(M*N) to O(1) 
 2. Text data preprocessing and cleaning which include - removing stopword, removing punctuations, removing urls etc. 
     Complexity:  O(M*(N^2))
@@ -46,15 +61,6 @@ Schema - <img>
     M= documents
     N= number of records 
 3.  Implement incremental aggregations and avoid re-computation.
-
-### `` Tech Stack:`` 
-
-1. S3
-2. Spark
-3. Redshift
-4. Elasticsearch *
-5. Kafka
-6. Spark streaming/Flink
 
 
 ### `` Presentation Slides:`` 
