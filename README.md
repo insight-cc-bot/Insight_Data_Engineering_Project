@@ -36,17 +36,21 @@ Schema - <img>
 <img src="./img/pipeline.png" width="800">
 
 **1. AWS S3:** Serve as datalake
-<img src="./img/S3.png" width="800">
+
+<img src="./img/S3.png" width="400">
 
 **2. Spark:** 4 node cluster, 1 master-3workers. I have written two separate pipelines on Spark, One to clean the text data, second to generate frequent tags from the cleaned data. 
-<img src="./img/spark-transformation.png" width="800">
+
+<img src="./img/spark-transformation.png" width="600">
 
 **3. Elasticsearch:** Indexed comments data on Elasticsearch. Used Spark to transform data into NDJSON format and then loaded on ES using bulk upload API. Comments were indexed by year. Latency to query indexes vary from .15 second to 1.35 seconds with variation in index size. 
 
 **4. Airflow:** My cluster has used 
-<img src="./img/airflow.png" width="800">
+
+<img src="./img/airflow.png" width="600">
 
 **5. Postgres:**
+
 <img src="./img/postgres.png" width="400">
 
 ### `Cluster Setup`
