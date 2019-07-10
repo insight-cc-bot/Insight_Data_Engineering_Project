@@ -35,9 +35,9 @@ default_args = {
 
 cluster_conf = {
     "elastic_search_data": "/home/ubuntu/Data",
-    "elastic_search_IP": "10.0.0.13",
+    "elastic_search_IP": "10.**",
     "elastic_search_port": "9200",
-    "spark_master": "spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077",
+    "spark_master": "spark://ec2-*-*-*.us-west-2.compute.amazonaws.com:7077",
     "spark_jars": "/usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar",
     "spark_prog": "/home/ubuntu/spark-warehouse/spark1.py"
 }
