@@ -54,7 +54,7 @@ def set_dir_structure():
 
 # Step 2. Run the spark job : Bash Task
 # "spark-submit
-# --master spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077
+# --master spark://ec2-*-*.us-west-2.compute.amazonaws.com:7077
 # --jars /usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar
 # /home/ubuntu/spark-warehouse/spark1.py arg1 arg2",
 spark_bash_job = "spark-submit --master {spark} --jars {jars} {prog} {arg1} {arg2}".format(
