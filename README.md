@@ -68,10 +68,13 @@ The cluster was set up on AWS. All the services used in this project were set up
 
 
 ### `` Presentation Slides:`` 
-bit.ly/hashtag-reddit-slides
+http://bit.ly/hashtag-reddit-slides
+
+### `` Project Link:`` 
+http://redditinsight.club/
 
 ### `` Project Demo:`` 
-http://redditinsight.club/
+http://bit.ly/hashtag-reddit-demo
 
 
 
