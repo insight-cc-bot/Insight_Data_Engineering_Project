@@ -56,14 +56,14 @@ Schema - <img>
 ### `Cluster Setup`
 The cluster was set up on AWS. All the services used in this project were set up by myself. I didn't use any `managed services` as they are very expensive and difficult to debug if you run into any errors. I used about 9 `m4.large` EC2 instances for the cluster.
 
-### ``Engineering Challenge:`` 
-1. Indexing posts for generated tags to reduce search complexity of  O(M*N) to O(1) 
-2. Text data preprocessing and cleaning which include - removing stopword, removing punctuations, removing urls etc. 
+### ``Engineering Challenge:``  
+1. Text data preprocessing and cleaning which include - removing stopword, removing punctuations, removing urls etc. 
     Complexity:  O(M*(N^2))
     O(N^2) to compare two text bodies (comments vs stopwords)
     O(M) for all posts from reddit
     M= documents
     N= number of records 
+2.  Spark performance improvement by increasing executor.memory from 1g to 6g, resulted in 5% increase in performance.
 3.  Implement incremental aggregations and avoid re-computation.
 
 
