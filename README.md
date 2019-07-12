@@ -68,7 +68,10 @@ The cluster was set up on AWS. All the services used in this project were set up
 
 
 ### `` Presentation Slides:`` 
-https://docs.google.com/presentation/d/1GJnKdTFyCLTXobDSQXum8JLYhgn6IeC2ZAp_jjl0nEU/edit#slide=id.g5b1cafed5b_0_1416
+bit.ly/hashtag-reddit-slides
+
+### `` Project Demo:`` 
+http://redditinsight.club/
 
 
 
