@@ -1,0 +1,10 @@
+07-14 16:11 urllib3.connectionpool DEBUG    Starting new HTTP connection (1): updatechecker.bryceboe.com
+07-14 16:11 urllib3.connectionpool DEBUG    http://updatechecker.bryceboe.com:80 "PUT /check HTTP/1.1" 200 23
+07-14 16:11 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/all/hot
+07-14 16:11 prawcore     DEBUG    Data: None
+07-14 16:11 prawcore     DEBUG    Params: {'limit': 30, 'raw_json': 1}
+07-14 16:11 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): www.reddit.com
+07-14 16:11 urllib3.connectionpool DEBUG    https://www.reddit.com:443 "POST /api/v1/access_token HTTP/1.1" 200 106
+07-14 16:11 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): oauth.reddit.com
+07-14 16:11 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/all/hot?limit=30&raw_json=1 HTTP/1.1" 200 21925
+07-14 16:11 prawcore     DEBUG    Response: 200 (21925 bytes)

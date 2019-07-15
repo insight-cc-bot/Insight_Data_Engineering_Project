@@ -1,0 +1,146 @@
+07-14 16:23 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/all/hot
+07-14 16:23 prawcore     DEBUG    Data: None
+07-14 16:23 prawcore     DEBUG    Params: {'limit': 30, 'raw_json': 1}
+07-14 16:23 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): www.reddit.com
+07-14 16:23 urllib3.connectionpool DEBUG    https://www.reddit.com:443 "POST /api/v1/access_token HTTP/1.1" 200 106
+07-14 16:23 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): oauth.reddit.com
+07-14 16:23 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/all/hot?limit=30&raw_json=1 HTTP/1.1" 200 21545
+07-14 16:23 prawcore     DEBUG    Response: 200 (21545 bytes)
+07-14 16:23 werkzeug     WARNING   * Debugger is active!
+07-14 16:23 werkzeug     INFO      * Debugger PIN: 180-191-237
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/about/
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/about/?raw_json=1 HTTP/1.1" 200 1540
+07-14 16:25 prawcore     DEBUG    Response: 200 (1540 bytes)
+07-14 16:25 root         INFO     PostgreSQL connection is closed
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/top
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 8072
+07-14 16:25 prawcore     DEBUG    Response: 200 (8072 bytes)
+07-14 16:25 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:25:44] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/about/
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/about/?raw_json=1 HTTP/1.1" 200 1540
+07-14 16:25 prawcore     DEBUG    Response: 200 (1540 bytes)
+07-14 16:25 root         INFO     PostgreSQL connection is closed
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/top
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 8077
+07-14 16:25 prawcore     DEBUG    Response: 200 (8077 bytes)
+07-14 16:25 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:25:51] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/about/
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/about/?raw_json=1 HTTP/1.1" 200 1540
+07-14 16:25 prawcore     DEBUG    Response: 200 (1540 bytes)
+07-14 16:25 root         INFO     PostgreSQL connection is closed
+07-14 16:25 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/top
+07-14 16:25 prawcore     DEBUG    Data: None
+07-14 16:25 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:25 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 8077
+07-14 16:25 prawcore     DEBUG    Response: 200 (8077 bytes)
+07-14 16:25 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:25:59] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:25 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:25:59] "[37mGET / HTTP/1.1[0m" 200 -
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/about/
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/about/?raw_json=1 HTTP/1.1" 200 1911
+07-14 16:26 prawcore     DEBUG    Response: 200 (1911 bytes)
+07-14 16:26 root         INFO     PostgreSQL connection is closed
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/top
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 7902
+07-14 16:26 prawcore     DEBUG    Response: 200 (7902 bytes)
+07-14 16:26 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:26:09] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/about/
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/about/?raw_json=1 HTTP/1.1" 200 1910
+07-14 16:26 prawcore     DEBUG    Response: 200 (1910 bytes)
+07-14 16:26 root         INFO     PostgreSQL connection is closed
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/top
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 7886
+07-14 16:26 prawcore     DEBUG    Response: 200 (7886 bytes)
+07-14 16:26 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:26:44] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:26 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:26:44] "[37mGET / HTTP/1.1[0m" 200 -
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/about/
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/about/?raw_json=1 HTTP/1.1" 200 3446
+07-14 16:26 prawcore     DEBUG    Response: 200 (3446 bytes)
+07-14 16:26 root         INFO     PostgreSQL connection is closed
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/top
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 5723
+07-14 16:26 prawcore     DEBUG    Response: 200 (5723 bytes)
+07-14 16:26 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:26:54] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/about/
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/about/?raw_json=1 HTTP/1.1" 200 3446
+07-14 16:26 prawcore     DEBUG    Response: 200 (3446 bytes)
+07-14 16:26 root         INFO     PostgreSQL connection is closed
+07-14 16:26 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/top
+07-14 16:26 prawcore     DEBUG    Data: None
+07-14 16:26 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:26 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 5709
+07-14 16:26 prawcore     DEBUG    Response: 200 (5709 bytes)
+07-14 16:26 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:26:57] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/about/
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/about/?raw_json=1 HTTP/1.1" 200 3446
+07-14 16:27 prawcore     DEBUG    Response: 200 (3446 bytes)
+07-14 16:27 root         INFO     PostgreSQL connection is closed
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/history/top
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/history/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 5706
+07-14 16:27 prawcore     DEBUG    Response: 200 (5706 bytes)
+07-14 16:27 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:27:19] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:27 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:27:21] "[37mGET / HTTP/1.1[0m" 200 -
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/about/
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/about/?raw_json=1 HTTP/1.1" 200 1911
+07-14 16:27 prawcore     DEBUG    Response: 200 (1911 bytes)
+07-14 16:27 root         INFO     PostgreSQL connection is closed
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/top
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 7890
+07-14 16:27 prawcore     DEBUG    Response: 200 (7890 bytes)
+07-14 16:27 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:27:28] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/about/
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/about/?raw_json=1 HTTP/1.1" 200 1912
+07-14 16:27 prawcore     DEBUG    Response: 200 (1912 bytes)
+07-14 16:27 root         INFO     PostgreSQL connection is closed
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/top
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 7896
+07-14 16:27 prawcore     DEBUG    Response: 200 (7896 bytes)
+07-14 16:27 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:27:30] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/about/
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/about/?raw_json=1 HTTP/1.1" 200 1910
+07-14 16:27 prawcore     DEBUG    Response: 200 (1910 bytes)
+07-14 16:27 root         INFO     PostgreSQL connection is closed
+07-14 16:27 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/howto/top
+07-14 16:27 prawcore     DEBUG    Data: None
+07-14 16:27 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:27 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/howto/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 7894
+07-14 16:27 prawcore     DEBUG    Response: 200 (7894 bytes)
+07-14 16:27 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:27:50] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:51 werkzeug     INFO      * Detected change in '/Users/smiley/Documents/Insight/Insight_Data_Engineering_Project/webapp/app.py', reloading

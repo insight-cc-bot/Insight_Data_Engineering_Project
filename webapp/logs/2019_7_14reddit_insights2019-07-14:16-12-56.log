@@ -1,0 +1,28 @@
+07-14 16:12 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/all/hot
+07-14 16:12 prawcore     DEBUG    Data: None
+07-14 16:12 prawcore     DEBUG    Params: {'limit': 30, 'raw_json': 1}
+07-14 16:12 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): www.reddit.com
+07-14 16:12 urllib3.connectionpool DEBUG    https://www.reddit.com:443 "POST /api/v1/access_token HTTP/1.1" 200 106
+07-14 16:12 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): oauth.reddit.com
+07-14 16:12 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/all/hot?limit=30&raw_json=1 HTTP/1.1" 200 21859
+07-14 16:12 prawcore     DEBUG    Response: 200 (21859 bytes)
+07-14 16:12 werkzeug     WARNING   * Debugger is active!
+07-14 16:12 werkzeug     INFO      * Debugger PIN: 180-191-237
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:10] "[37mGET / HTTP/1.1[0m" 200 -
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:10] "[37mGET /Users/dm/Desktop/insight_html/static/images/left_snoo.png HTTP/1.1[0m" 200 -
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:10] "[37mGET /Users/dm/Desktop/insight_html/static/images/right_snoo.png HTTP/1.1[0m" 200 -
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:10] "[37mGET /Users/dm/Desktop/insight_html/static/images/reddit_header.jpg HTTP/1.1[0m" 200 -
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:11] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+07-14 16:13 root         INFO     PostgreSQL connection is closed
+07-14 16:13 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/top
+07-14 16:13 prawcore     DEBUG    Data: None
+07-14 16:13 prawcore     DEBUG    Params: {'t': 'all', 'limit': 10, 'raw_json': 1}
+07-14 16:13 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/top?t=all&limit=10&raw_json=1 HTTP/1.1" 200 8076
+07-14 16:13 prawcore     DEBUG    Response: 200 (8076 bytes)
+07-14 16:13 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/worldpolitics/about/
+07-14 16:13 prawcore     DEBUG    Data: None
+07-14 16:13 prawcore     DEBUG    Params: {'raw_json': 1}
+07-14 16:13 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/worldpolitics/about/?raw_json=1 HTTP/1.1" 200 1540
+07-14 16:13 prawcore     DEBUG    Response: 200 (1540 bytes)
+07-14 16:13 werkzeug     INFO     127.0.0.1 - - [14/Jul/2019 16:13:25] "[37mPOST /redditinsight/get_tags HTTP/1.1[0m" 200 -
+07-14 16:19 werkzeug     INFO      * Detected change in '/Users/smiley/Documents/Insight/Insight_Data_Engineering_Project/webapp/app.py', reloading

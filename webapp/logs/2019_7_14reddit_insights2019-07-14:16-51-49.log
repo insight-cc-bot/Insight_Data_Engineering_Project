@@ -1,0 +1,11 @@
+07-14 16:51 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/all/hot
+07-14 16:51 prawcore     DEBUG    Data: None
+07-14 16:51 prawcore     DEBUG    Params: {'limit': 30, 'raw_json': 1}
+07-14 16:51 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): www.reddit.com
+07-14 16:51 urllib3.connectionpool DEBUG    https://www.reddit.com:443 "POST /api/v1/access_token HTTP/1.1" 200 106
+07-14 16:51 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): oauth.reddit.com
+07-14 16:51 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/all/hot?limit=30&raw_json=1 HTTP/1.1" 200 21737
+07-14 16:51 prawcore     DEBUG    Response: 200 (21737 bytes)
+07-14 16:51 werkzeug     WARNING   * Debugger is active!
+07-14 16:51 werkzeug     INFO      * Debugger PIN: 180-191-237
+07-14 17:11 werkzeug     INFO      * Detected change in '/Users/smiley/Documents/Insight/Insight_Data_Engineering_Project/webapp/config.py', reloading

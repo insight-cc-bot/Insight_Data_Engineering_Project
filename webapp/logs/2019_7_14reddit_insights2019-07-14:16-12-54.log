@@ -1,0 +1,15 @@
+07-14 16:12 prawcore     DEBUG    Fetching: GET https://oauth.reddit.com/r/all/hot
+07-14 16:12 prawcore     DEBUG    Data: None
+07-14 16:12 prawcore     DEBUG    Params: {'limit': 30, 'raw_json': 1}
+07-14 16:12 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): www.reddit.com
+07-14 16:12 urllib3.connectionpool DEBUG    https://www.reddit.com:443 "POST /api/v1/access_token HTTP/1.1" 200 106
+07-14 16:12 urllib3.connectionpool DEBUG    Starting new HTTPS connection (1): oauth.reddit.com
+07-14 16:12 urllib3.connectionpool DEBUG    https://oauth.reddit.com:443 "GET /r/all/hot?limit=30&raw_json=1 HTTP/1.1" 200 21849
+07-14 16:12 prawcore     DEBUG    Response: 200 (21849 bytes)
+07-14 16:12 werkzeug     INFO      * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+07-14 16:12 werkzeug     INFO      * Restarting with stat
+07-14 16:19 werkzeug     INFO      * Restarting with stat
+07-14 16:20 werkzeug     INFO      * Restarting with stat
+07-14 16:23 werkzeug     INFO      * Restarting with stat
+07-14 16:51 werkzeug     INFO      * Restarting with stat
+07-14 17:11 werkzeug     INFO      * Restarting with stat
