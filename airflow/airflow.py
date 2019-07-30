@@ -1,9 +1,5 @@
 """
 # Spark ETL DAG
-# Perform following tasks -
-1. Set up correct directory structure
-2. Run ETL task for NLP pipeline
-3. Upload cleaned data to Elasticsearch
 """
 
 from airflow import DAG
@@ -16,12 +12,16 @@ import shutil
 from datetime import datetime
 from datetime import timedelta
 
-YEAR = 2008
-MONTH = 5
+#YEAR = 2008
+#MONTH = 5
+YEAR = '{{ execution_date.strftime("%Y")}}'
+MONTH ='{{ execution_date.strftime("%m")}}'
+
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2016, 1, 1),
+    "start_date": datetime(2012, 1, 1),
+    "end_date": datetime(2012, 12, 1),
     "email": ["mehta.dhananjay28@gmail.com"],
     "email_on_failure": True,
     "email_on_retry": False,    
@@ -35,11 +35,11 @@ default_args = {
 
 cluster_conf = {
     "elastic_search_data": "/home/ubuntu/Data",
-    "elastic_search_IP": "10.**",
+    "elastic_search_IP": "10.0.0.13",
     "elastic_search_port": "9200",
-    "spark_master": "spark://ec2-*-*-*.us-west-2.compute.amazonaws.com:7077",
+    "spark_master": "spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077",
     "spark_jars": "/usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar",
-    "spark_prog": "/home/ubuntu/spark-warehouse/spark1.py"
+    "spark_prog": "/home/ubuntu/spark-warehouse/spark_stage1.py"
 }
 
 
@@ -48,13 +48,14 @@ cluster_conf = {
 def set_dir_structure():
     data_dir = cluster_conf["elastic_search_data"]
     # delete the folders if path exist
-    if os.path.exists(data_dir):
-        shutil.rmtree(data_dir)
+    print(data_dir)
+    if not os.path.exists(data_dir):
+        os.mkdir(data_dir)
 
 
 # Step 2. Run the spark job : Bash Task
 # "spark-submit
-# --master spark://ec2-*-*.us-west-2.compute.amazonaws.com:7077
+# --master spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077
 # --jars /usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar
 # /home/ubuntu/spark-warehouse/spark1.py arg1 arg2",
 spark_bash_job = "spark-submit --master {spark} --jars {jars} {prog} {arg1} {arg2}".format(
@@ -70,7 +71,8 @@ def load_to_elastic(filename):
               "--data-binary @{file} -H 'Content-Type: application/json'".format(ip=ip_address, port=port,
                                                                                  file=filename)
     try:
-        output = os.system("{command}".format(command=es_command))
+        #output = os.system("{command}".format(command=es_command))
+        print(es_command)
     except Exception as ex:        
         pass
     return
@@ -94,7 +96,7 @@ def elastic_search_load():
 
 # instantiate DAG
 #dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval=timedelta(days=1))
-dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval='@hourly')
+dag = DAG(dag_id='spark_etl', description='NLP Data Cleaning and indexing', default_args=default_args, schedule_interval='@monthly')
 
 # set tasks
 dir_job = PythonOperator(
