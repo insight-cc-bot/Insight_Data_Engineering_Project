@@ -5,7 +5,7 @@
 from airflow import DAG
 #from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
-from airflow.macros import ds
+#from airflow.macros import ds
 
 # other packages
 import os
@@ -13,40 +13,43 @@ from datetime import datetime
 from datetime import timedelta
 
 # macros
-run_date = ds
+#run_date = datetime(
 # year/month for backfill
-#YEAR = run_date.year()
-# set the date to job execution time
+#YEAR = 2010#run_date.year()
+#MONTH =10  #run_date.month()
 YEAR = '{{ execution_date.strftime("%Y")}}'
-MONTH ='{{ execution_date.strftime("%m")}}'
+MONTH = '{{ execution_date.strftime("%m")}}'
+print(YEAR)
+print(MONTH)
 
 default_arguments = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2010, 7, 1),
+    "start_date": datetime(2013, 8, 1),
     "email_on_failure": False,
     "email_on_retry": False,
     "retries": 0,
     "retry_delay": timedelta(minutes=5),
     'queue': 'bash_queue',
-    "end_date": datetime(2010, 12, 1)
+    "end_date": datetime(2013, 12, 1)
 }
 
 spark_cluster = {
-    "spark_master": "spark://ec2-**.us-west-2.compute.amazonaws.com:7077",
+    "spark_master": "spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077",
     "spark_jars": "/usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar",
     "spark_prog": "/home/ubuntu/spark-warehouse/spark_stage2.py",
 }
 postgres_cluster={
-    "postgres_hostname" : "ec2-*.us-west-2.compute.amazonaws.com",
+    "postgres_hostname" : "ec2-54-214-117-182.us-west-2.compute.amazonaws.com",
     "postgres_database": "reddit",
     "postgres_table": "wordcount_table",
-    "job":"/home/ubuntu/spark-warehouse/S3_to_postgres.py"
+    #"job":"/home/ubuntu/spark-warehouse/S3_to_postgres.py"
+    "job":"/home/ubuntu/S3_to_Postgres.py"
 }
 
 # Syntax :
 # "spark-submit
-# --master spark://ec2-*.us-west-2.compute.amazonaws.com:7077
+# --master spark://ec2-34-211-145-63.us-west-2.compute.amazonaws.com:7077
 # --jars /usr/local/spark/jars/hadoop-aws-2.7.1.jar,/usr/local/spark/jars/aws-java-sdk-1.7.4.jar
 # /home/ubuntu/spark-warehouse/spark1.py arg1 arg2",
 
@@ -61,7 +64,6 @@ dag = DAG(dag_id='popular_topics', description='Get popular words for current mo
 
 print(get_top_topics)
 print(load_to_postgres)
-
 # Task 1: Generate frequent topics
 get_words = BashOperator(
     task_id='get_popular_topics',
@@ -71,7 +73,7 @@ get_words = BashOperator(
 # Task 3: Load data to Postgres
 load_postgres = BashOperator(
     task_id='load_to_postgres',
-    python_callable=load_to_postgres,
+    bash_command=load_to_postgres,
     dag=dag)
 
 # setting dependencies
